@@ -1,29 +1,47 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-
-Vue.use(VueRouter)
-
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import store from '../store';
+import post from './custom/post';
+Vue.use(VueRouter);
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+    mode: 'history',
+    linkExactActiveClass: 'active',
+    routes: [
+        {
+            path: '/',
+            component: () => import('./../views/layouts/App.vue'),
+            children: [
+                { path: '/', redirect: { name: 'home' } },
+                {
+                    path: '/dashboard',
+                    name: 'home',
+                    component: () => import('./../views/Dashboard.vue')
+                },
+              ...post
+            ]
+        },
 
-export default router
+        // {
+        //     path: '/',
+        //     component: () => import('./../views/layouts/Guest.vue'),
+        //     children: [
+        //         ...guest,
+        //     ]
+        // }
+
+    ]
+});
+
+// router.beforeEach((to, from, next) => {
+//     const guestRoute = ['login', 'register', 'forget', 'password.reset']
+//     if (store.state.auth.authenticated) {
+//         if (guestRoute.includes(to.name)) next({ name: 'home' })
+//         else next()
+//     } else {
+//         if (guestRoute.includes(to.name) || to.name == 'farm.monitoring') next()
+//         else next({ name: 'login' })
+//     }
+// })
+
+export default router;
