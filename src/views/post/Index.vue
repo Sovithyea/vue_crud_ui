@@ -24,9 +24,40 @@
         <v-data-table
             :headers="headers"
             :items="items"
-            :items-per-page="5"
+            :items-per-page="15"
             class="elevation-1"
-        ></v-data-table>
+        >
+        <template #[`top`]>
+                <v-toolbar flat>
+                    <v-btn class="ma-1" color="primary" :to="{ name: 'post.create' }"><v-icon left>mdi-plus</v-icon>New Customer</v-btn>
+                    <v-spacer></v-spacer>
+                </v-toolbar>
+        </template>
+        <template #[`item.no`]="{ item, index }" :ref="item.id">
+            {{index+1}}
+        </template>
+
+        <template #[`item.actions`]="{ item }">
+                <v-tooltip top>
+                    <template #activator="{ on, attrs }">
+                        <v-btn color="primary" v-bind="attrs" icon small :to="{ name: 'post.show', params: { post: item.id } }" v-on="on"><v-icon>mdi-eye</v-icon></v-btn>
+                    </template>
+                    <span>Detail</span>
+                </v-tooltip>
+                <v-tooltip top>
+                    <template #activator="{ on, attrs }">
+                        <v-btn color="warning" icon small :to="{ name: 'post.edit', params: { post: item.id } }" v-bind="attrs" v-on="on"><v-icon>mdi-pencil-box-outline</v-icon></v-btn>
+                    </template>
+                    <span>Edit</span>
+                </v-tooltip>
+                <v-tooltip top>
+                    <template #activator="{ on, attrs }">
+                        <v-btn color="error" icon small v-bind="attrs" @click="onClickDelete(item)" v-on="on"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                    </template>
+                    <span>Delete</span>
+                </v-tooltip>
+            </template>
+        </v-data-table>
         <!-- <div v-for="item in itemss">
             <h5>{{item.id}}</h5>
             <h5>{{item.title}}</h5>
@@ -48,12 +79,12 @@ export default {
                 {
                     text: 'No',
                     sortable: false,
-                    value: 'item.id'
+                    value: 'no'
                 },
                 {
                     text: 'Title',
                     sortable: false,
-                    value: 'item.title'
+                    value: 'title'
                 },
                 {
                     text: 'Type',
@@ -100,12 +131,6 @@ export default {
             })   
             .then((res) => {
                 this.items = res.data.data;
-                console.log(this.items);
-                // console.log(res.data.tests);
-                // this.items = Object.keys(res.data).map((key) => [Number(key), obj[key]])
-                // console.log(res.data);
-                // this.items = res.data[0];
-                // console.log(this.items);
             })
             .catch(({res}) => {
                 console.log(res);
@@ -123,9 +148,18 @@ export default {
         onConfirmDelete()
         {
             this.deleting = true
-            this.axios.delete(`Delete.php?id=${ this.deleteItem }`)
+            this.axios.delete(`post/Delete.php`, {
+                params: {
+                    'id': `${ this.deleteItem }`
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            })
             .then( response => {
                 this.fetchData()
+                console.log(response);
                 this.diaglogDelete = false
             })
             .catch(({ response }) => {

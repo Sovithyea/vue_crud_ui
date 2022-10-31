@@ -36,13 +36,13 @@
                         </v-col>
                         <v-col class="py-0" cols="12">
                             <v-autocomplete
-                                v-model="form.data.categories"
+                                v-model="form.data.category_id"
                                 :items="categories"
                                 required
                                 outlined
                                 label="Category"
-                                :item-text="id"
-                                :item-value="name"
+                                item-text="name"
+                                item-value="id"
                                 :rules="[v => !!v || 'Category is required']"
                                 clearable
                             >
@@ -59,7 +59,6 @@
     </v-container>
 </template>
 <script>
-import axios, { Axios, AxiosHeaders } from 'axios'
 
 export default {
     data: () => ({
@@ -72,10 +71,12 @@ export default {
                 description: null
             },
         },
+        categories: []
     }),
 
     mounted()
     {
+        this.fetchData()
         this.loading = false
     },
 
@@ -86,7 +87,7 @@ export default {
             if (this.$refs.form.validate())
             {
                 this.form.submitting = true
-                axios.post('post/store.php')
+                this.axios.post('post/Store.php', this.form.data)
                 .then(response => {
                     console.log(response);
                     this.$router.go(-1)
@@ -98,6 +99,18 @@ export default {
                     this.form.submitting = false
                 })
             }
+        },
+
+        fetchData()
+        {
+            this.axios.get('post/Create.php')
+            .then((res) => {
+                this.categories = res.data.categories
+                // console.log(this.categories);
+            })
+            .catch(({res}) => {
+                console.log(res);
+            })
         }
 
         // keyDown(e)

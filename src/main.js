@@ -8,7 +8,7 @@ import VueAxios from 'vue-axios'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
-axios.defaults.baseURL = "http://phpcrudapi.com/api"
+axios.defaults.baseURL = "http://localhost:8000/api"
 new Vue({
   router,
   store,

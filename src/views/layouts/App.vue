@@ -24,7 +24,7 @@
         </v-navigation-drawer>
         <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app dark>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-toolbar-title>Phone Shop System</v-toolbar-title>
+            <v-toolbar-title>Vue js PHP Raw</v-toolbar-title>
             <!-- <div v-if="$vuetify.breakpoint.smAndUp" class="ml-4 text-subtitle-2">Hello</div> -->
             <v-spacer></v-spacer>
             <!-- <v-menu open-on-hover offset-y offset-overflow>
